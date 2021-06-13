@@ -2,6 +2,8 @@
 
 :warning: **Alerta: Esse projeto ainda está em desenvolvimento! (WIP)** :warning:
 
+:warning: **Alerta 2: Seja cuidadoso ao modificar comandos com barra, as mudanças podem levar até uma hora para ter efeito! Quando estiver fazendo testes, defina uma variável de ambiente SLASH_GUILD para o ID do servidor que você está utilizando para testar!** :warning:
+
 ## Inicialização
 
 Para inicializar esse projeto, você precisa instalar o Node.js e um gerenciador de pacotes em sua máquina. O que foi desenvolvido aqui foi escrito baseado na versão 14.17.0 LTS do Node.js junto com o NPM 7.16.0.

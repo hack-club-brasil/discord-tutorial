@@ -4,6 +4,8 @@
 
 :warning: **Warning: This is still a work in progress! (WIP)** :warning:
 
+:warning: **Warning 2: Be careful when changing slash commands, command changes can take up to 1 hour to take effect! When testing locally, define an environment variable SLASH_GUILD with the ID of the guild you will be using to test!** :warning:
+
 ## Setup
 
 To setup this project, you need to install Node.js and a package manager (like NPM or Yarn) on your machine. This was built around Node.js 14.17.0 LTS and NPM 7.16.0.
