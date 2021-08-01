@@ -85,7 +85,7 @@ export default async function welcomeService(
   );
 
   await message.react('👍');
-  await message.awaitReactions(() => true, {
+  await message.awaitReactions((_, user) => user.id === guildMember.user?.id, {
     max: 1,
   });
 
@@ -118,9 +118,12 @@ export default async function welcomeService(
   await highSchoolMessage.react('👍');
   await highSchoolMessage.react('👎');
 
-  const highSchoolAnswer = await highSchoolMessage.awaitReactions(() => true, {
-    max: 1,
-  });
+  const highSchoolAnswer = await highSchoolMessage.awaitReactions(
+    (_, user) => user.id === guildMember.user?.id,
+    {
+      max: 1,
+    },
+  );
 
   const highSchoolReaction = highSchoolAnswer.first();
 
@@ -155,9 +158,12 @@ export default async function welcomeService(
 
     await notStudentDisclaimerMessage.react('👍');
 
-    await notStudentDisclaimerMessage.awaitReactions(() => true, {
-      max: 1,
-    });
+    await notStudentDisclaimerMessage.awaitReactions(
+      (_, user) => user.id === guildMember.user?.id,
+      {
+        max: 1,
+      },
+    );
   }
 
   await later(5000);
@@ -167,7 +173,7 @@ export default async function welcomeService(
   );
 
   const messageMotivation = await highSchoolMessage.channel.awaitMessages(
-    () => true,
+    answerMotivation => answerMotivation.author.id === guildMember.user?.id,
     { max: 1 },
   );
 
@@ -212,7 +218,10 @@ export default async function welcomeService(
   await later(1000);
 
   await conductMessage.react('👍');
-  await conductMessage.awaitReactions(() => true, { max: 1 });
+  await conductMessage.awaitReactions(
+    (_, user) => user.id === guildMember.user?.id,
+    { max: 1 },
+  );
 
   await loggingChannel.send(
     `${
@@ -232,9 +241,7 @@ export default async function welcomeService(
 
   await later(3000);
 
-  await welcomeChannel.updateOverwrite(guildMember, {
-    VIEW_CHANNEL: false,
-  });
+  await welcomeChannel.updateOverwrite(guildMember, {});
 
   await guildMember.roles.add(memberRoleId);
 
