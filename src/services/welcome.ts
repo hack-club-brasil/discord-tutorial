@@ -234,7 +234,7 @@ export default async function welcomeService(
   await later(1000);
 
   await channel.send(
-    `Seu próximo passo agora? Conversar com a comunidade. Estamos animados para te conhecer <:parrot:${
+    `Seu próximo passo agora? Conversar com a comunidade. Estamos animados para te conhecer <a:parrot:${
       process.env.PARROT_ID || '826951538701500457'
     }>`,
   );
