@@ -30,7 +30,7 @@ const registerCommands = async (
 const fetchCommands = async (
   client: Discord.Client,
 ): Promise<
-  Discord.Collection<`${bigint}`, Discord.ApplicationCommand> | undefined
+  Discord.Collection<string, Discord.ApplicationCommand> | undefined
 > => {
   const guildId =
     process.env.NODE_ENV !== 'production' ? process.env.SLASH_GUILD : null;
@@ -76,16 +76,15 @@ const ReadyEvent: IEvent<'ready'> = {
       return;
     }
 
-    const registeredCommandsData =
-      registeredCommands.map<Discord.ApplicationCommandData>(command => {
-        const { name, description, options, defaultPermission } = command;
-        return {
-          name,
-          description,
-          options,
-          defaultPermission,
-        };
-      });
+    const registeredCommandsData = registeredCommands.map(command => {
+      const { name, description, options, defaultPermission } = command;
+      return {
+        name,
+        description,
+        options,
+        defaultPermission,
+      };
+    });
 
     const commandsAlreadyUpdated = _.isEqual(
       commandsList,
