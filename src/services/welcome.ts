@@ -76,7 +76,7 @@ export default async function welcomeService(
     ],
   });
 
-  await waitingChannel.updateOverwrite(guildMember, {
+  await waitingChannel.permissionOverwrites.edit(guildMember, {
     VIEW_CHANNEL: false,
   });
 
@@ -85,7 +85,8 @@ export default async function welcomeService(
   );
 
   await message.react('👍');
-  await message.awaitReactions((_, user) => user.id === guildMember.user?.id, {
+  await message.awaitReactions({
+    filter: (_, user) => user.id === guildMember.user?.id,
     max: 1,
   });
 
@@ -118,12 +119,10 @@ export default async function welcomeService(
   await highSchoolMessage.react('👍');
   await highSchoolMessage.react('👎');
 
-  const highSchoolAnswer = await highSchoolMessage.awaitReactions(
-    (_, user) => user.id === guildMember.user?.id,
-    {
-      max: 1,
-    },
-  );
+  const highSchoolAnswer = await highSchoolMessage.awaitReactions({
+    filter: (_, user) => user.id === guildMember.user?.id,
+    max: 1,
+  });
 
   const highSchoolReaction = highSchoolAnswer.first();
 
@@ -158,12 +157,10 @@ export default async function welcomeService(
 
     await notStudentDisclaimerMessage.react('👍');
 
-    await notStudentDisclaimerMessage.awaitReactions(
-      (_, user) => user.id === guildMember.user?.id,
-      {
-        max: 1,
-      },
-    );
+    await notStudentDisclaimerMessage.awaitReactions({
+      filter: (_, user) => user.id === guildMember.user?.id,
+      max: 1,
+    });
   }
 
   await later(5000);
@@ -172,10 +169,11 @@ export default async function welcomeService(
     'Agora responda: O que trouxe você para a nossa comunidade?',
   );
 
-  const messageMotivation = await highSchoolMessage.channel.awaitMessages(
-    answerMotivation => answerMotivation.author.id === guildMember.user?.id,
-    { max: 1 },
-  );
+  const messageMotivation = await highSchoolMessage.channel.awaitMessages({
+    filter: answerMotivation =>
+      answerMotivation.author.id === guildMember.user?.id,
+    max: 1,
+  });
 
   await loggingChannel.send(
     `${
@@ -201,7 +199,7 @@ export default async function welcomeService(
 
   await later(3000);
 
-  welcomeChannel.updateOverwrite(guildMember, {
+  welcomeChannel.permissionOverwrites.edit(guildMember, {
     VIEW_CHANNEL: true,
   });
 
@@ -218,10 +216,10 @@ export default async function welcomeService(
   await later(1000);
 
   await conductMessage.react('👍');
-  await conductMessage.awaitReactions(
-    (_, user) => user.id === guildMember.user?.id,
-    { max: 1 },
-  );
+  await conductMessage.awaitReactions({
+    filter: (_, user) => user.id === guildMember.user?.id,
+    max: 1,
+  });
 
   await loggingChannel.send(
     `${
@@ -241,7 +239,7 @@ export default async function welcomeService(
 
   await later(3000);
 
-  await welcomeChannel.updateOverwrite(guildMember, {});
+  await welcomeChannel.permissionOverwrites.edit(guildMember, {});
 
   await guildMember.roles.add(memberRoleId);
 
