@@ -9,7 +9,11 @@ const GuildMemberAddEvent: IEvent<'guildMemberAdd'> = {
       return;
     }
 
-    await welcomeService(client, guildMember);
+    try {
+      await welcomeService(client, guildMember);
+    } catch (error) {
+      console.error(error);
+    }
   },
 };
 
