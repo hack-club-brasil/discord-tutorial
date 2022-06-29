@@ -1,4 +1,5 @@
 import Discord from 'discord.js';
+import Airtable from 'airtable';
 
 function later(delay: number) {
   return new Promise(resolve => {
@@ -10,9 +11,27 @@ export default async function welcomeService(
   client: Discord.Client,
   guildMember: Discord.GuildMember,
 ): Promise<void> {
+  if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
+    return;
+  }
+
+  const airtable = new Airtable({
+    apiKey: process.env.AIRTABLE_API_KEY,
+  });
+
+  const base = airtable.base(process.env.AIRTABLE_BASE_ID);
+
+  const [userRecord] = await base('Users').create([
+    {
+      fields: {
+        Name: guildMember.user.username,
+        'Discord ID': guildMember.user.id,
+      },
+    },
+  ]);
+
   if (
     !process.env.WELCOME_CHANNEL ||
-    !process.env.LOGGING_CHANNEL ||
     !process.env.WAITING_CHANNEL ||
     !process.env.STAFF_CHANNEL
   ) {
@@ -21,7 +40,6 @@ export default async function welcomeService(
 
   const memberRoleId = process.env.MEMBER_ROLE;
   const welcomeChannelId = BigInt(process.env.WELCOME_CHANNEL);
-  const loggingChannelId = BigInt(process.env.LOGGING_CHANNEL);
   const waitingChannelId = BigInt(process.env.WAITING_CHANNEL);
   const staffChannelId = BigInt(process.env.STAFF_CHANNEL);
 
@@ -39,15 +57,10 @@ export default async function welcomeService(
   const { guild } = guildMember;
 
   const welcomeChannel = await guild.channels.fetch(`${welcomeChannelId}`);
-  const loggingChannel = await guild.channels.fetch(`${loggingChannelId}`);
   const waitingChannel = await guild.channels.fetch(`${waitingChannelId}`);
   const staffChannel = await guild.channels.fetch(`${staffChannelId}`);
 
   if (!welcomeChannel || !(welcomeChannel instanceof Discord.TextChannel)) {
-    return;
-  }
-
-  if (!loggingChannel || !(loggingChannel instanceof Discord.TextChannel)) {
     return;
   }
 
@@ -76,6 +89,17 @@ export default async function welcomeService(
     ],
   });
 
+  await base('Users').update([
+    {
+      id: userRecord.id,
+      fields: {
+        'Onboard Channel ID': channel.id,
+        'Language preference': 'Português',
+        'Current Onboarding Step': 'Channel created',
+      },
+    },
+  ]);
+
   await waitingChannel.permissionOverwrites.edit(guildMember, {
     VIEW_CHANNEL: false,
   });
@@ -90,13 +114,14 @@ export default async function welcomeService(
     max: 1,
   });
 
-  await loggingChannel.send(
-    `${
-      guildMember.nickname ||
-      guildMember.user?.username ||
-      '-nickname não encontrado-'
-    } (${guildMember.id}) - iniciou tutorial`,
-  );
+  await base('Users').update([
+    {
+      id: userRecord.id,
+      fields: {
+        'Current Onboarding Step': 'Tutorial started',
+      },
+    },
+  ]);
 
   await channel.send(
     'Maravilha, então eu vou te ajudar a entrar no Hack Club Brasil agora!',
@@ -127,13 +152,15 @@ export default async function welcomeService(
   const highSchoolReaction = highSchoolAnswer.first();
 
   if (highSchoolReaction?.emoji.name === '👍') {
-    await loggingChannel.send(
-      `${
-        guildMember.nickname ||
-        guildMember.user?.username ||
-        '-nickname não encontrado-'
-      } (${guildMember.id}) - é estudante de ensino médio ou fundamental`,
-    );
+    await base('Users').update([
+      {
+        id: userRecord.id,
+        fields: {
+          'Is Student?': true,
+          'Current Onboarding Step': 'Student question answered',
+        },
+      },
+    ]);
 
     await later(1000);
 
@@ -141,13 +168,15 @@ export default async function welcomeService(
       'Perfeito, o Hack Club Brasil é um lugar feito para estudantes, então você vai se encaixar bem!',
     );
   } else {
-    await loggingChannel.send(
-      `${
-        guildMember.nickname ||
-        guildMember.user?.username ||
-        '-nickname não encontrado-'
-      } (${guildMember.id}) - não é estudante de ensino médio ou fundamental`,
-    );
+    await base('Users').update([
+      {
+        id: userRecord.id,
+        fields: {
+          'Is Student?': false,
+          'Current Onboarding Step': 'Student question answered',
+        },
+      },
+    ]);
 
     await later(1000);
 
@@ -161,6 +190,15 @@ export default async function welcomeService(
       filter: (_, user) => user.id === guildMember.user?.id,
       max: 1,
     });
+
+    await base('Users').update([
+      {
+        id: userRecord.id,
+        fields: {
+          'Current Onboarding Step': 'Not student disclaimer acknowledged',
+        },
+      },
+    ]);
   }
 
   await later(5000);
@@ -175,15 +213,15 @@ export default async function welcomeService(
     max: 1,
   });
 
-  await loggingChannel.send(
-    `${
-      guildMember.nickname ||
-      guildMember.user?.username ||
-      '-nickname não encontrado-'
-    } (${guildMember.id}) - disse que o que o trouxe aqui foi: ${
-      messageMotivation.first()?.content
-    }`,
-  );
+  await base('Users').update([
+    {
+      id: userRecord.id,
+      fields: {
+        Motivation: messageMotivation.first()?.content,
+        'Current Onboarding Step': 'Motivation question answered',
+      },
+    },
+  ]);
 
   await later(1000);
 
@@ -221,13 +259,15 @@ export default async function welcomeService(
     max: 1,
   });
 
-  await loggingChannel.send(
-    `${
-      guildMember.nickname ||
-      guildMember.user?.username ||
-      '-nickname não encontrado-'
-    } (${guildMember.id}) - concordou com o código de conduta`,
-  );
+  await base('Users').update([
+    {
+      id: userRecord.id,
+      fields: {
+        'Code of Conduct Acceptance': true,
+        'Current Onboarding Step': 'Code of conduct accepted',
+      },
+    },
+  ]);
 
   await later(1000);
 
@@ -243,13 +283,15 @@ export default async function welcomeService(
 
   await guildMember.roles.add(memberRoleId);
 
-  await loggingChannel.send(
-    `${
-      guildMember.nickname ||
-      guildMember.user?.username ||
-      '-nickname não encontrado-'
-    } (${guildMember.id}) - acesso completo liberado`,
-  );
+  await base('Users').update([
+    {
+      id: userRecord.id,
+      fields: {
+        Onboarded: true,
+        'Current Onboarding Step': 'Access granted',
+      },
+    },
+  ]);
 
   await channel.send(
     'Liberei a você acesso a todos os canais da comunidade! Fique a vontade para olhar todos!',
@@ -273,13 +315,14 @@ export default async function welcomeService(
 
   const deleted = channel.deletable ? await channel.delete() : null;
 
-  await loggingChannel.send(
-    `${
-      guildMember.nickname ||
-      guildMember.user?.username ||
-      '-nickname não encontrado-'
-    } (${guildMember.id}) - finalizou o tutorial (canal deletado: ${
-      deleted ? 'sim' : 'não'
-    })`,
-  );
+  if (deleted) {
+    await base('Users').update([
+      {
+        id: userRecord.id,
+        fields: {
+          'Current Onboarding Step': 'Channel deleted',
+        },
+      },
+    ]);
+  }
 }
