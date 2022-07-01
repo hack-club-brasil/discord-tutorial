@@ -1,5 +1,5 @@
 import IEvent from '../interfaces/IEvent';
-import welcomeService from '../services/welcome';
+import initializeTutorialService from '../services/initializeTutorialService';
 
 const GuildMemberAddEvent: IEvent<'guildMemberAdd'> = {
   name: 'guildMemberAdd',
@@ -10,7 +10,7 @@ const GuildMemberAddEvent: IEvent<'guildMemberAdd'> = {
     }
 
     try {
-      await welcomeService(client, guildMember);
+      await initializeTutorialService(client, guildMember);
     } catch (error) {
       console.error(error);
     }

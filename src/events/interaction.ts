@@ -1,29 +1,50 @@
 import IEvent from '../interfaces/IEvent';
 
-import commandManager from '../commands/manager';
+import interactionManager from '../interactions/manager';
 
-const InteractionEvent: IEvent<'interaction'> = {
-  name: 'interaction',
+const InteractionEvent: IEvent<'interactionCreate'> = {
+  name: 'interactionCreate',
   once: false,
   execute: async (client, interaction?): Promise<void> => {
-    if (!interaction || !interaction.isCommand()) return;
+    if (!interaction) return;
 
-    const commandsList = commandManager.commands;
+    if (interaction.isButton()) {
+      const buttonsList = interactionManager.buttons;
 
-    const findCommand = commandsList.find(
-      command => command.name === interaction.commandName,
-    );
+      const findButton = buttonsList.find(
+        button => button.id === interaction.customId,
+      );
 
-    if (!findCommand) {
-      interaction.reply({
-        content:
-          'Opa! Não consegui encontrar esse comando!\nEntre em contato com algum administrador :)',
-        ephemeral: true,
-      });
-      return;
+      if (!findButton) {
+        interaction.reply({
+          content:
+            'Opa! Não consegui encontrar esse botão!\nEntre em contato com algum administrador :)',
+          ephemeral: true,
+        });
+        return;
+      }
+
+      findButton.execute(client, interaction);
     }
 
-    findCommand.execute(client, interaction);
+    if (interaction.isCommand()) {
+      const commandsList = interactionManager.commands;
+
+      const findCommand = commandsList.find(
+        command => command.name === interaction.commandName,
+      );
+
+      if (!findCommand) {
+        interaction.reply({
+          content:
+            'Opa! Não consegui encontrar esse comando!\nEntre em contato com algum administrador :)',
+          ephemeral: true,
+        });
+        return;
+      }
+
+      findCommand.execute(client, interaction);
+    }
   },
 };
 
