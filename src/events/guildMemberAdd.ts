@@ -1,4 +1,5 @@
 import IEvent from '../interfaces/IEvent';
+import dealWithOnboardedUsersService from '../services/dealWithOnboardedUsersService';
 import initializeTutorialService from '../services/initializeTutorialService';
 
 const GuildMemberAddEvent: IEvent<'guildMemberAdd'> = {
@@ -10,6 +11,14 @@ const GuildMemberAddEvent: IEvent<'guildMemberAdd'> = {
     }
 
     try {
+      const isAlreadyOnboarded = await dealWithOnboardedUsersService(
+        guildMember,
+      );
+
+      if (isAlreadyOnboarded) {
+        return;
+      }
+
       await initializeTutorialService(client, guildMember);
     } catch (error) {
       console.error(error);
