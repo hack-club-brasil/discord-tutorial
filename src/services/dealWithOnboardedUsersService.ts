@@ -16,10 +16,31 @@ export default async function dealWithOnboardedUsersService(
 
   const [findUserRecord] = await base('Users')
     .select({
-      fields: ['Onboarded'],
+      fields: ['Onboarded', 'Onboard Channel ID'],
       filterByFormula: `{Discord ID} = "${guildMember.user.id}"`,
     })
     .all();
+
+  const userTutorialChannelId =
+    findUserRecord && findUserRecord.fields['Onboard Channel ID'];
+
+  if (findUserRecord && userTutorialChannelId) {
+    guildMember.guild.channels
+      .fetch(`${userTutorialChannelId}`)
+      .then(channel => {
+        channel?.delete();
+      })
+      .catch(() => null);
+
+    await base('Users').update([
+      {
+        id: findUserRecord.id,
+        fields: {
+          'Onboard Channel ID': '',
+        },
+      },
+    ]);
+  }
 
   if (!findUserRecord || !findUserRecord.fields.Onboarded) return false;
 
