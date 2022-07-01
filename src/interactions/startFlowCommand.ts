@@ -1,8 +1,8 @@
 import { GuildMember } from 'discord.js';
 import ICommand from '../interfaces/ICommand';
-import welcomeService from '../services/welcome';
+import initializeTutorialService from '../services/initializeTutorialService';
 
-const StartFlow: ICommand = {
+const StartFlowCommand: ICommand = {
   name: 'startflow',
   description: 'Inicia o fluxo de boas-vindas para um usuário em específico!',
   defaultPermission: false,
@@ -31,10 +31,10 @@ const StartFlow: ICommand = {
       return;
     }
 
-    welcomeService(client, user);
+    initializeTutorialService(client, user).catch(err => console.log(err));
 
     await interaction.reply({ content: 'Fluxo iniciado!' });
   },
 };
 
-export default StartFlow;
+export default StartFlowCommand;

@@ -3,7 +3,7 @@ import Discord from 'discord.js';
 
 import IEvent from '../interfaces/IEvent';
 
-import commandManager from '../commands/manager';
+import interactionManager from '../interactions/manager';
 
 const registerCommands = async (
   client: Discord.Client,
@@ -58,15 +58,17 @@ const ReadyEvent: IEvent<'ready'> = {
     if (!client.application?.owner) await client.application?.fetch();
 
     const commandsList =
-      commandManager.commands.map<Discord.ApplicationCommandData>(command => {
-        const { name, description, options, defaultPermission } = command;
-        return {
-          name,
-          description,
-          options: options || [],
-          defaultPermission: defaultPermission || true,
-        };
-      });
+      interactionManager.commands.map<Discord.ApplicationCommandData>(
+        command => {
+          const { name, description, options, defaultPermission } = command;
+          return {
+            name,
+            description,
+            options: options || [],
+            defaultPermission: defaultPermission || true,
+          };
+        },
+      );
 
     const registeredCommands = await fetchCommands(client);
 
