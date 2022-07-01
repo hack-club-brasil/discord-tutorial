@@ -6,6 +6,7 @@ import { IBaseEvent } from './interfaces/IEvent';
 import eventManager from './events/manager';
 
 dotenv.config();
+
 const client = new Discord.Client({
   intents: [
     Discord.Intents.FLAGS.GUILD_PRESENCES,
@@ -25,10 +26,6 @@ events.forEach(event => {
   }
 
   client.on(event.name, event.execute.bind(null, client));
-
-  client.on('ready', () => {
-    console.log('test');
-  });
 });
 
 client.login(process.env.DISCORD_API_TOKEN);
