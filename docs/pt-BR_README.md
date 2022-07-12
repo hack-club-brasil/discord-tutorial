@@ -1,12 +1,10 @@
-# Clippy para Discord
+# Toriel para Discord
 
-:warning: **Alerta: Esse projeto ainda está em desenvolvimento! (WIP)** :warning:
-
-:warning: **Alerta 2: Seja cuidadoso ao modificar comandos com barra, as mudanças podem levar até uma hora para ter efeito! Quando estiver fazendo testes, defina uma variável de ambiente SLASH_GUILD para o ID do servidor que você está utilizando para testar!** :warning:
+:warning: **Alerta: Seja cuidadoso ao modificar comandos com barra, as mudanças podem levar até uma hora para ter efeito! Quando estiver fazendo testes, defina uma variável de ambiente SLASH_GUILD para o ID do servidor que você está utilizando para testar!** :warning:
 
 ## Inicialização
 
-Para inicializar esse projeto, você precisa instalar o Node.js e um gerenciador de pacotes em sua máquina. O que foi desenvolvido aqui foi escrito baseado na versão 14.17.0 LTS do Node.js junto com o NPM 7.16.0.
+Para inicializar esse projeto, você precisa instalar o Node.js e um gerenciador de pacotes em sua máquina. O que foi desenvolvido aqui foi escrito baseado na versão 16.15.1 LTS do Node.js junto com o NPM 8.11.0.
 
 Primeiro, instale todas as dependências, utilizando `npm install` ou `yarn install`.
 Agora é hora de inicializar nosso projeto, mas antes, você precisa configurar seu token do Discord nas suas variáveis de ambiente, definindo-o como `DISCORD_API_TOKEN`. Uma alternativa é criar uma cópia do arquivo, `.env.example` chamando-a de `.env` e preencher o campo correspondente com seu token.
@@ -28,5 +26,5 @@ Nota: Não temos um padrão para nomear commits, portanto, sinta-se livre para e
 
 Nota 2: Embora todos esses padrões tenham sido estabelecidos, não significa que sua PR será negada se esquecer de algum, mas seguir eles nos ajuda a poupar tempo na implementação de novos recursos!
 
-Caso deseje corrigir um problema, você pode seguir os passos acima da mesma forma (ou se for uma correção bem simples, pode abrir a PR diretamente), mas estaremos também disponíveis para contato por e-mail, então sinta-se livre caso deseje enviar uma mensagem para [oi@hackclubbrasil.com.br](mailto:oi@hackclubbrasil.com.br) se achar necessário.
+Caso deseje corrigir um problema, você pode seguir os passos acima da mesma forma (ou se for uma correção bem simples, pode abrir a PR diretamente), mas estaremos também disponíveis para contato por e-mail, então sinta-se livre caso deseje enviar uma mensagem para [brasil@hackclub.com](mailto:brasil@hackclub.com) se achar necessário.
 

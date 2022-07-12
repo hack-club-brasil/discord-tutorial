@@ -1,14 +1,12 @@
-# Clippy for Discord
+# Toriel for Discord
 
 🇧🇷 Você é do Brasil? Não se preocupe, temos uma versão traduzida para você! Clique [aqui](docs/pt-BR_README.md)! 🇧🇷
 
-:warning: **Warning: This is still a work in progress! (WIP)** :warning:
-
-:warning: **Warning 2: Be careful when changing slash commands, command changes can take up to 1 hour to take effect! When testing locally, define an environment variable SLASH_GUILD with the ID of the guild you will be using to test!** :warning:
+:warning: **Warning: Be careful when changing slash commands, command changes can take up to 1 hour to take effect! When testing locally, define an environment variable SLASH_GUILD with the ID of the guild you will be using to test!** :warning:
 
 ## Setup
 
-To setup this project, you need to install Node.js and a package manager (like NPM or Yarn) on your machine. This was built around Node.js 14.17.0 LTS and NPM 7.16.0.
+To setup this project, you need to install Node.js and a package manager (like NPM or Yarn) on your machine. This was built around Node.js 16.15.1 LTS and NPM 8.11.0.
 
 First, install all the dependencies, using `npm install` or `yarn install`.
 Then, it's time to run our project, but first you have to set your Discord token on your environment variables entitled as `DISCORD_API_TOKEN`. As an alternative, you can also create a copy of `.env.example` calling it `.env` and fill the corresponding field with your token.
@@ -30,4 +28,4 @@ PS: We don't have a pattern to name commits, so feel free to write it as you wan
 
 PS 2: While all this rules have been stablished, they are not exactly requirements, so your PR will not be necessarily closed because you forgot one of them. But in the meanwhile, these are important to save us time to implement new features!
 
-In case you want to fix a bug, you can follow the steps above too (or if that's really simple you can open a PR directly), but we're also available through email, so feel free to send a message to [oi@hackclubbrasil.com.br](mailto:oi@hackclubbrasil.com.br) if you think it's necessary.
+In case you want to fix a bug, you can follow the steps above too (or if that's really simple you can open a PR directly), but we're also available through email, so feel free to send a message to [brasil@hackclub.com](mailto:brasil@hackclub.com) if you think it's necessary.
